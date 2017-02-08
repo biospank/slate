@@ -1,10 +1,9 @@
 ---
-title: API Reference
+title: Documentazione API SSO
 
 language_tabs:
   - shell
   - ruby
-  - python
   - javascript
 
 toc_footers:
@@ -17,173 +16,218 @@ includes:
 search: true
 ---
 
-# Introduction
+# Introduzione
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
+SSO è un sistema di autenticazione centralizzato per web e mobile.
+Espone servizi (endpoints) in modalità REST per la registrazione, autenticazione e notifica via mail degli utenti appartenenti ad unità organizzative che intendono aderire al sistema di autenticazione centralizzato.
 
-We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
+Le funzionalità esposte sono:
 
-This example API documentation page was created with [Slate](https://github.com/tripit/slate). Feel free to edit it and use it as a base for your own API's documentation.
+* Sessione account
+* Registrazione utente
+* Autenticazione utente
+* Aggiornamento profilo utente
+* Cambio password
 
-# Authentication
+Il codice di esempio compare sul lato destro di questa pagina. Per cambiare il
+client utilizzato cliccare sui tab in alto a destra.
 
-> To authorize, use this code:
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
+# Sessione
 
 ```shell
-# With shell, you can just pass the correct header with each request
-curl "api_endpoint_here"
-  -H "Authorization: meowmeowmeow"
+# Per creare una sessione
+
+curl -i
+  -X POST
+  -d '{"account": {
+        "access_key": "<access_key>",
+        "secret_key": "<secret_key>"
+      }
+    }'
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  https://api.dardy.me/sso/session
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-```
-
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
-
-<aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
-</aside>
-
-# Kittens
-
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
-
-```shell
-curl "http://example.com/api/kittens"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
-
-> The above command returns JSON structured like this:
-
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
-
-This endpoint retrieves all kittens.
-
-### HTTP Request
-
-`GET http://example.com/api/kittens`
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2"
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
+> Ritorna un JSON strutturato come segue:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "account":
+  {
+    "id":2,
+    "app_name": "Test",
+    "active": true,
+    "access_key": "<access_key>"
+  }
 }
 ```
 
-This endpoint retrieves a specific kitten.
+> Ritorna i seguenti headers http:
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+```http
+authorization: Dardy <jwt>
+x-expires: <timestamp>
+```
 
-### HTTP Request
+> [jwt](https://en.wikipedia.org/wiki/JSON_Web_Token) è il token che deve essere utilizzato per le chiamate agli altri endpoints.
 
-`GET http://example.com/kittens/<ID>`
+> [timestamp](https://en.wikipedia.org/wiki/Unix_timevoid()) indica la data di scadenza della sessione (1 giorno)
 
-### URL Parameters
+### Descrizione
+
+SSO usa chiavi di accesso per l'utilizzo dele API. Per richiedere le chiavi di accesso contattare il provider Dardy.
+
+### Richiesta HTTP
+
+`POST https://api.dardy.me/sso/session`
+
+La creazione della sessione richiede l'inclusione del seguente header http:
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+Sostituire `<access_key>` e `<secret_key>` con le chiavi di accesso fornite da Dardy.
+
+# Registrazione
+
+### Descrizione
+
+Crea un utente inviando una mail all'indirizzo specificato dall'utente per la procedura di registrazione e una notifica via mail all'indirizzo dell'account.
+
+## Creazione utente
+
+### Descrizione
+
+Crea un utente `non attivo` in stato `non verificato`.
+
+> Crea utente:
+
+```shell
+curl
+  -X POST
+  -d '{"user": {
+        "email": "test@example.com",
+        "password": "secret123",
+        "password_confirmation": "secret123",
+        "profile": {
+          "first_name": "nome",
+          "last_name": "congome",
+          "fiscal_code": "codice fiscale",
+          "date_of_birth": "data di nascita (yyyy-mm-dd)",
+          "place_of_birth": "luogo di nascita",
+          "phone_number": "numero di telefono",
+          "profession": "professione",
+          "specialization": "specializzazione",
+          "board_member": "iscrizione ordine",
+          "board_number": "numero iscrizione",
+          "province_board": "provincia iscrizione",
+          "employment": "attività lavorativa",
+          "province_enployment": "provincia attività lavorativa"
+        }
+      }'
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  https://api.dardy.me/sso/user/signup
+```
+
+> Sostituire `<jwt>` con il token presente dell'header della risposta alla chiamata [sessione](#sessione)
+
+> ritorna un JSON strutturato come segue:
+
+```json
+{
+  "user": {
+    "id": 37,
+    "status": "unverified",
+    "email": "test@example.com",
+    "active": false
+  }
+}
+```
+
+La registrazione utente richiede l'inclusione dei seguenti headers http:
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una sessione.
+
+### Richiesta HTTP
+
+`POST https://api.dardy.me/sso/user/signup`
+
+### Codici errore
+
+Codice | Descrizione
+------------- | -------
+201 | Created -- La richiesta è andata a buon fine
+404 | Not Found -- Codice di attivazione non valido
+
+<aside class="notice">
+Sostituire <code>&lt;jwt&gt;</code> con il token presente dell'header della risposta alla chiamata [sessione](#sessione).
+</aside>
+
+## Attivazione utente
+
+### Descrizione
+
+Invia la richiesta di attivazione.
+
+> Crea utente:
+
+```shell
+curl
+  -X PUT
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  https://api.dardy.me/sso/user/activate/<activation-code>
+```
+
+> Sostituire `<jwt>` con il token presente dell'header della risposta alla chiamata [sessione](#sessione)
+
+> Sostituire `<activation-code>` con il codice di attivazione fornito dall'utente che ha ricevuto la mail
+
+> Ritorna un JSON strutturato come segue:
+
+```json
+{
+  "user": {
+    "status": "unverified",
+    "id": 37,
+    "email": "test@example.com",
+    "active": true
+  }
+}
+```
+
+La registrazione utente richiede l'inclusione dei seguenti headers http:
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una sessione.
+
+### Richiesta HTTP
+
+`POST https://api.dardy.me/sso/user/activate/<activation-code>`
+
+### Parametri
 
 Parameter | Description
 --------- | -----------
-ID | The ID of the kitten to retrieve
+activation-code | Codice di attivazione fornito dall'utente che ha ricevuto la mail
 
+### Codici errore
+
+Codice | Descrizione
+------------- | -------
+200 | Success -- La richiesta è andata a buon fine
+404 | Not Found -- Codice di attivazione non valido
