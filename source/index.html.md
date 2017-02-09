@@ -19,15 +19,15 @@ search: true
 # Introduzione
 
 SSO è un sistema di autenticazione centralizzato per web e mobile.
-Espone servizi (endpoints) in modalità REST per la registrazione, autenticazione e notifica via mail degli utenti appartenenti ad unità organizzative che intendono aderire al sistema di autenticazione centralizzato.
+Espone servizi (endpoints) in modalità REST per la registrazione, autenticazione e notifiche mail.
 
-Le funzionalità esposte sono:
+Gli account registrati che intendono aderire al sistema di autenticazione hanno a disposizione le seguenti funzionalità.
 
 * Sessione account
-* Registrazione utente
+* Registrazione utente (double opt-in)
 * Autenticazione utente
+* Cambio password (double opt-in)
 * Aggiornamento profilo utente
-* Cambio password
 
 Il codice di esempio compare sul lato destro di questa pagina. Per cambiare il
 client utilizzato cliccare sui tab in alto a destra.
@@ -63,17 +63,6 @@ curl -i
 }
 ```
 
-> Ritorna i seguenti headers http:
-
-```http
-authorization: Dardy <jwt>
-x-expires: <timestamp>
-```
-
-> [jwt](https://en.wikipedia.org/wiki/JSON_Web_Token) è il token che deve essere utilizzato per le chiamate agli altri endpoints.
-
-> [timestamp](https://en.wikipedia.org/wiki/Unix_timevoid()) indica la data di scadenza della sessione (1 giorno)
-
 ### Descrizione
 
 SSO usa chiavi di accesso per l'utilizzo dele API. Per richiedere le chiavi di accesso contattare il provider Dardy.
@@ -82,23 +71,56 @@ SSO usa chiavi di accesso per l'utilizzo dele API. Per richiedere le chiavi di a
 
 `POST https://api.dardy.me/sso/session`
 
-La creazione della sessione richiede l'inclusione del seguente header http:
+### Headers HTTP
 
 `Accept: application/vnd.dardy.sso.v1+json`
 
 Sostituire `<access_key>` e `<secret_key>` con le chiavi di accesso fornite da Dardy.
 
-# Registrazione
+### Headers risposta HTTP
+
+`authorization: Dardy <jwt>`
+
+<aside class="warning">
+  <code>jwt</code> è il token che deve essere utilizzato per le chiamate agli altri endpoints.
+</aside>
+
+`x-expires: <timestamp>`
+
+<aside class="notice">
+  <code>timestamp</code> indica la data di scadenza della sessione (1 giorno)
+</aside>
+
+### Codici risposta HTTP
+
+Codice | Descrizione
+-------| -------
+201 | Created -- La richiesta è andata a buon fine
+404 | Not Found -- Account non trovato
+401 | Unauthorized -- Account non autorizzato
+422 | Unprocessable Entity -- Errore di validazione
+423 | Locked -- Account temporaneamente disabilitato
+
+# Registrazione Utente
 
 ### Descrizione
 
-Crea un utente inviando una mail all'indirizzo specificato dall'utente per la procedura di registrazione e una notifica via mail all'indirizzo dell'account.
+La registrazione si completa in due fasi:
 
-## Creazione utente
+* Registazione
+* Attivazione
 
-### Descrizione
+## Registazione
 
-Crea un utente `non attivo` in stato `non verificato`.
+Crea un utente `non attivo` in stato `non verificato`. Invia una mail all'indirizzo specificato dall'utente per la procedura di registrazione e una notifica via mail all'indirizzo dell'account.
+
+Esistono due template per la mail di registrazione:
+
+1. Con codice attivazione (mobile)
+  * Escludendo `callback_url` dal body del messaggio HTTP
+2. Con link alla pagina di attivazione (web)
+  * Includendo `callback_url` nel body del messaggio HTTP
+  * il codice attivazione viene appeso all'url `callback_url`
 
 > Crea utente:
 
@@ -109,6 +131,7 @@ curl
         "email": "test@example.com",
         "password": "secret123",
         "password_confirmation": "secret123",
+        "callback_url": "https//mio.sito.com/user/activate (opzionale)",
         "profile": {
           "first_name": "nome",
           "last_name": "congome",
@@ -131,9 +154,7 @@ curl
   https://api.dardy.me/sso/user/signup
 ```
 
-> Sostituire `<jwt>` con il token presente dell'header della risposta alla chiamata [sessione](#sessione)
-
-> ritorna un JSON strutturato come segue:
+> Ritorna un JSON strutturato come segue:
 
 ```json
 {
@@ -146,34 +167,33 @@ curl
 }
 ```
 
-La registrazione utente richiede l'inclusione dei seguenti headers http:
-
-`Accept: application/vnd.dardy.sso.v1+json`
-
-`Authorization: Dardy <jwt>`
-
 **Nota**
 
-Per utilizzare questo endpoint è necessario creare una sessione.
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
 `POST https://api.dardy.me/sso/user/signup`
 
-### Codici errore
+### Headers HTTP
 
-Codice | Descrizione
-------------- | -------
-201 | Created -- La richiesta è andata a buon fine
-404 | Not Found -- Codice di attivazione non valido
+`Accept: application/vnd.dardy.sso.v1+json`
 
-<aside class="notice">
-Sostituire <code>&lt;jwt&gt;</code> con il token presente dell'header della risposta alla chiamata [sessione](#sessione).
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
 </aside>
 
-## Attivazione utente
+### Codici risposta HTTP
 
-### Descrizione
+Codice | Descrizione
+-------| -------
+201 | Created -- La richiesta è andata a buon fine
+404 | Not Found -- Codice di attivazione non valido
+422 | Unprocessable Entity -- Errore di validazione
+
+## Attivazione
 
 Invia la richiesta di attivazione.
 
@@ -188,10 +208,6 @@ curl
   https://api.dardy.me/sso/user/activate/<activation-code>
 ```
 
-> Sostituire `<jwt>` con il token presente dell'header della risposta alla chiamata [sessione](#sessione)
-
-> Sostituire `<activation-code>` con il codice di attivazione fornito dall'utente che ha ricevuto la mail
-
 > Ritorna un JSON strutturato come segue:
 
 ```json
@@ -205,29 +221,276 @@ curl
 }
 ```
 
-La registrazione utente richiede l'inclusione dei seguenti headers http:
-
-`Accept: application/vnd.dardy.sso.v1+json`
-
-`Authorization: Dardy <jwt>`
-
 **Nota**
 
-Per utilizzare questo endpoint è necessario creare una sessione.
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
 `POST https://api.dardy.me/sso/user/activate/<activation-code>`
 
+### Headers HTTP
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
+</aside>
+
+<aside class="info">
+  Sostituire <code>&lt;activation-code&gt;</code> con il codice di attivazione fornito dall'utente che ha ricevuto la mail
+</aside>
+
 ### Parametri
 
 Parameter | Description
 --------- | -----------
-activation-code | Codice di attivazione fornito dall'utente che ha ricevuto la mail
+&lt;activation-code&gt; | Codice di attivazione fornito dall'utente che ha ricevuto la mail
 
-### Codici errore
+### Codici risposta HTTP
 
 Codice | Descrizione
 ------------- | -------
 200 | Success -- La richiesta è andata a buon fine
 404 | Not Found -- Codice di attivazione non valido
+422 | Unprocessable Entity -- Errore di validazione
+
+## Reinvio codice attivazione
+
+Reinvia la mail di registrazione all'indirizzo specificato dall'utente.
+
+> Reinvio codice attivazione:
+
+```shell
+curl
+  -X POST
+  -d '{"user": {
+        "email": "test@example.com"
+      }
+    }'
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  https://api.dardy.me/sso/user/activation/resend
+```
+
+> Ritorna un JSON strutturato come segue:
+
+```json
+{
+  "user": {
+    "status": "unverified",
+    "id": 37,
+    "email": "test@example.com",
+    "active": false
+  }
+}
+```
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
+
+### Richiesta HTTP
+
+`POST https://api.dardy.me/sso/user//activation/resend`
+
+### Headers HTTP
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
+</aside>
+
+### Codici risposta HTTP
+
+Codice | Descrizione
+------------- | -------
+200 | Success -- La richiesta è andata a buon fine
+404 | Not Found -- Email non trovata
+422 | Unprocessable Entity -- Errore di validazione
+
+# Autenticazione Utente
+
+```shell
+# Autenticazione utente
+
+curl
+  -X POST
+  -d '{"user": {
+        "email": "test@example.com",
+        "password": "secret123"
+      }
+    }'
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  https://api.dardy.me/sso/user/signin
+```
+
+> Ritorna un JSON strutturato come segue:
+
+```json
+{
+  "user": {
+    "status": "verified",
+    "id": 37,
+    "email": "test@example.com",
+    "active": true
+  }
+}
+```
+
+### Descrizione
+
+Autentica un utente registrato fornendo indirizzo email e password.
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
+
+### Richiesta HTTP
+
+`POST https://api.dardy.me/user/signin`
+
+### Headers HTTP
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
+</aside>
+
+### Codici risposta HTTP
+
+Codice | Descrizione
+-------| -------
+201 | Created -- La richiesta è andata a buon fine
+404 | Not Found -- Utente non trovato
+401 | Unauthorized -- Utente non autorizzato
+422 | Unprocessable Entity -- Errore di validazione
+423 | Locked -- Utente temporaneamente disabilitato
+451 | Unavailable For Legal Reason - Utente non verificato
+
+# Cambio Password Utente
+
+### Descrizione
+
+Il cambio password si completa in due fasi:
+
+* Richiesta cambio password
+* Cambio password
+
+## Richiesta cambio password
+
+```shell
+# Richiesta cambio password
+
+curl
+  -X POST
+  -d '{"user": {
+        "email": "test@example.com",
+        "callback_url": "https//mio.sito.com/change/password (opzionale)"
+      }
+    }'
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  https://api.dardy.me/sso/password/reset
+```
+
+Invia una mail all'indirizzo dell'utente che ha richiesto il cambio password.
+
+Esistono due template per la mail di richiesta cambio password:
+
+1. Con codice cambio password (mobile)
+  * Escludendo `callback_url` dal body del messaggio HTTP
+2. Con link alla pagina di cambio password (web)
+  * Includendo `callback_url` nel body del messaggio HTTP
+  * il codice cambio password viene appeso all'url `callback_url`
+
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
+
+### Richiesta HTTP
+
+`POST https://api.dardy.me/sso/password/reset`
+
+### Headers HTTP
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
+</aside>
+
+### Codici risposta HTTP
+
+Codice | Descrizione
+-------| -------
+201 | Created -- La richiesta è andata a buon fine
+404 | Not Found -- Email non trovata
+422 | Unprocessable Entity -- Errore di validazione
+
+## Cambio password
+
+```shell
+# Cambio password
+
+curl
+  -X PUT
+  -d '{"user": {
+        "password": "new_secret123",
+        "password_confirmation": "new_secret123"
+      }
+    }'
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  https://api.dardy.me/sso/password/reset
+```
+
+Effetua il cambio password utilizzando le nuove credenziali.
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
+
+### Richiesta HTTP
+
+`PUT https://api.dardy.me/sso/password/reset/<reset-code>`
+
+### Parametri
+
+Parameter | Description
+--------- | -----------
+&lt;reset-code&gt; | Codice di reset fornito dall'utente che ha ricevuto la mail
+
+### Headers HTTP
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
+</aside>
+
+### Codici risposta HTTP
+
+Codice | Descrizione
+-------| -------
+200 | OK -- La richiesta è andata a buon fine
+404 | Not Found -- Codice non trovato
+422 | Unprocessable Entity -- Errore di validazione
