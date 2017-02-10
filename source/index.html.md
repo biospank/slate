@@ -7,7 +7,6 @@ language_tabs:
   - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
   - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
 
 includes:
@@ -117,9 +116,9 @@ Crea un utente `non attivo` in stato `non verificato`. Invia una mail all'indiri
 Esistono due template per la mail di registrazione:
 
 1. Con codice attivazione (mobile)
-  * Escludendo `callback_url` dal body del messaggio HTTP
+  * Escludendo `callback_url` dal corpo del messaggio HTTP
 2. Con link alla pagina di attivazione (web)
-  * Includendo `callback_url` nel body del messaggio HTTP
+  * Includendo `callback_url` nel corpo del messaggio HTTP
   * il codice attivazione viene appeso all'url `callback_url`
 
 > Crea utente:
@@ -162,7 +161,10 @@ curl
     "id": 37,
     "status": "unverified",
     "email": "test@example.com",
-    "active": false
+    "active": false,
+    "profile": {
+      ...
+    }
   }
 }
 ```
@@ -411,9 +413,9 @@ Invia una mail all'indirizzo dell'utente che ha richiesto il cambio password.
 Esistono due template per la mail di richiesta cambio password:
 
 1. Con codice cambio password (mobile)
-  * Escludendo `callback_url` dal body del messaggio HTTP
+  * Escludendo `callback_url` dal corpo del messaggio HTTP
 2. Con link alla pagina di cambio password (web)
-  * Includendo `callback_url` nel body del messaggio HTTP
+  * Includendo `callback_url` nel corpo del messaggio HTTP
   * il codice cambio password viene appeso all'url `callback_url`
 
 
@@ -458,7 +460,7 @@ curl
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
-  https://api.dardy.me/sso/password/reset
+  https://api.dardy.me/sso/password/reset/<reset-code>
 ```
 
 Effetua il cambio password utilizzando le nuove credenziali.
@@ -493,4 +495,75 @@ Codice | Descrizione
 -------| -------
 200 | OK -- La richiesta è andata a buon fine
 404 | Not Found -- Codice non trovato
+422 | Unprocessable Entity -- Errore di validazione
+
+# Aggiornamento Profilo Utente
+
+```shell
+# Cambio password
+
+curl
+  -X PUT
+  -d '{"profile": {
+        "phone_number": "nuovo numero di telefono",
+        "profession": "nuova professione"
+      }
+    }'
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  https://api.dardy.me/sso/user/<id>/profile
+```
+
+> Ritorna un JSON strutturato come segue:
+
+```json
+{
+  "user": {
+    "status": "verified",
+    "profile": {
+      ...
+      "phone_number": "nuovo numero di telefono",
+      "profession": "nuova professione",
+      ...
+    },
+    "id": 37,
+    "email": "test@example.com",
+    "active": true
+  }
+}
+```
+
+Aggiorna il profilo utente con i dati inviati nel corpo del messaggio HTTP.
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
+
+### Richiesta HTTP
+
+`PUT https://api.dardy.me/sso/user/<id>/profile`
+
+### Parametri
+
+Parameter | Description
+--------- | -----------
+&lt;id&gt; | Id dell'utente che ha richiesto l'aggiornamento del profilo
+
+### Headers HTTP
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
+</aside>
+
+### Codici risposta HTTP
+
+Codice | Descrizione
+-------| -------
+200 | OK -- La richiesta è andata a buon fine
+404 | Not Found -- Utente non trovato
 422 | Unprocessable Entity -- Errore di validazione
