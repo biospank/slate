@@ -15,6 +15,11 @@ set :js_dir, 'javascripts'
 set :images_dir, 'images'
 set :fonts_dir, 'fonts'
 
+## Pdfmaker custom extension.
+require 'middleman-pdfmaker'
+
+activate :pdfmaker
+
 # Activate the syntax highlighter
 activate :syntax
 

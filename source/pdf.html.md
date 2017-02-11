@@ -1,16 +1,7 @@
 ---
+layout: "pdf"
 title: Documentazione API SSO
-
 version: "1.0"
-
-language_tabs:
-  - shell
-  - ruby
-  - javascript
-
-toc_footers:
-  - <a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a>
-
 includes:
   - introduzione
   - sessione
@@ -20,6 +11,4 @@ includes:
   - cambio_password
   - profilo
   - errori
-
-search: true
 ---

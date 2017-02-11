@@ -1,0 +1,70 @@
+# Aggiornamento Profilo Utente
+
+```shell
+# Cambio password
+
+curl
+  -X PUT
+  -d '{"profile": {
+        "phone_number": "nuovo numero di telefono",
+        "profession": "nuova professione"
+      }
+    }'
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  https://api.dardy.me/sso/user/<id>/profile
+```
+
+> Ritorna un JSON strutturato come segue:
+
+```json
+{
+  "user": {
+    "status": "verified",
+    "profile": {
+      ...
+      "phone_number": "nuovo numero di telefono",
+      "profession": "nuova professione",
+      ...
+    },
+    "id": 37,
+    "email": "test@example.com",
+    "active": true
+  }
+}
+```
+
+Aggiorna il profilo utente con i dati inviati nel corpo del messaggio HTTP.
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
+
+### Richiesta HTTP
+
+`PUT https://api.dardy.me/sso/user/<id>/profile`
+
+### Parametri
+
+Parameter | Description
+--------- | -----------
+&lt;id&gt; | Id dell'utente che ha richiesto l'aggiornamento del profilo
+
+### Headers HTTP
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
+</aside>
+
+### Codici risposta HTTP
+
+Codice | Descrizione
+-------| -------
+200 | OK -- La richiesta è andata a buon fine
+404 | Not Found -- Utente non trovato
+422 | Unprocessable Entity -- Errore di validazione
