@@ -19,9 +19,12 @@ Esistono due template per la mail di registrazione:
   * Includendo `callback_url` nel corpo del messaggio HTTP
   * il codice attivazione viene appeso all'url `callback_url`
 
-> Crea utente:
+> Esempio
 
 ```shell
+
+# cURL
+
 curl
   -X POST
   -d '{"user": {
@@ -49,6 +52,76 @@ curl
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
   https://api.dardy.me/sso/user/signup
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.post('https://api.dardy.me/sso/user/signup',
+  body: '{"user": {
+          "email": "test@example.com",
+          "password": "secret123",
+          "password_confirmation": "secret123",
+          "callback_url": "https//mio.sito.com/user/activate (opzionale)",
+          "profile": {
+            "first_name": "nome",
+            "last_name": "congome",
+            "fiscal_code": "codice fiscale",
+            "date_of_birth": "data di nascita (yyyy-mm-dd)",
+            "place_of_birth": "luogo di nascita",
+            "phone_number": "numero di telefono",
+            "profession": "professione",
+            "specialization": "specializzazione",
+            "board_member": "iscrizione ordine",
+            "board_number": "numero iscrizione",
+            "province_board": "provincia iscrizione",
+            "employment": "attività lavorativa",
+            "province_enployment": "provincia attività lavorativa"
+          }
+        }',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json',
+    'Authorization' => 'Dardy <jwt>'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "POST",
+  url: "https://api.dardy.me/sso/user/signup",
+  data: '{"user": {' +
+          '"email": "test@example.com",' +
+          '"password": "secret123",' +
+          '"password_confirmation": "secret123",' +
+          '"callback_url": "https//mio.sito.com/user/activate (opzionale)",' +
+          '"profile": {' +
+            '"first_name": "nome",' +
+            '"last_name": "congome",' +
+            '"fiscal_code": "codice fiscale",' +
+            '"date_of_birth": "data di nascita (yyyy-mm-dd)",' +
+            '"place_of_birth": "luogo di nascita",' +
+            '"phone_number": "numero di telefono",' +
+            '"profession": "professione",' +
+            '"specialization": "specializzazione",' +
+            '"board_member": "iscrizione ordine",' +
+            '"board_number": "numero iscrizione",' +
+            '"province_board": "provincia iscrizione",' +
+            '"employment": "attività lavorativa",' +
+            '"province_enployment": "provincia attività lavorativa"' +
+          '}' +
+        '}',
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json",
+    "Authorization": "Dardy <jwt>"
+  }
+});
 ```
 
 > Ritorna un JSON strutturato come segue:
@@ -97,15 +170,46 @@ Codice | Descrizione
 
 Invia la richiesta di attivazione.
 
-> Crea utente:
+> Esempio
 
 ```shell
+
+# cURL
+
 curl
   -X PUT
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
   https://api.dardy.me/sso/user/activate/<activation-code>
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.put('https://api.dardy.me/sso/user/activate/<activation-code>',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json',
+    'Authorization' => 'Dardy <jwt>'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "PUT",
+  url: "https://api.dardy.me/sso/user/activate/<activation-code>",
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json",
+    "Authorization": "Dardy <jwt>"
+  }
+});
 ```
 
 > Ritorna un JSON strutturato come segue:

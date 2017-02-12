@@ -1,7 +1,14 @@
 # Sessione
 
+### Descrizione
+
+SSO usa chiavi di accesso per l'utilizzo dele API. Per richiedere le chiavi di accesso contattare il provider Dardy.
+
+> Esempio
+
 ```shell
-# Per creare una sessione
+
+# cURL
 
 curl -i
   -X POST
@@ -13,6 +20,43 @@ curl -i
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   https://api.dardy.me/sso/session
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.post('https://api.dardy.me/sso/session',
+  body: '{"account": {
+            "access_key": "<access_key>",
+            "secret_key": "<secret_key>"
+           }
+         }',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "POST",
+  url: "https://api.dardy.me/sso/session",
+  data: '{' +
+    '"account": {' +
+      '"access_key": "<access_key>",' +
+      '"secret_key": "<secret_key>"' +
+    '}' +
+  '}',
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json"
+  }
+});
 ```
 
 > Ritorna un JSON strutturato come segue:
@@ -28,10 +72,6 @@ curl -i
   }
 }
 ```
-
-### Descrizione
-
-SSO usa chiavi di accesso per l'utilizzo dele API. Per richiedere le chiavi di accesso contattare il provider Dardy.
 
 ### Richiesta HTTP
 

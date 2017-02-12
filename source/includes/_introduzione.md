@@ -10,6 +10,3 @@ Gli account registrati che intendono aderire al sistema di autenticazione hanno 
 * Autenticazione utente
 * Cambio password (double opt-in)
 * Aggiornamento profilo utente
-
-Il codice di esempio compare sul lato destro di questa pagina. Per cambiare il
-client utilizzato cliccare sui tab in alto a destra.

@@ -1,7 +1,10 @@
 # Autenticazione Utente
 
+> Esempio
+
 ```shell
-# Autenticazione utente
+
+# cURL
 
 curl
   -X POST
@@ -14,6 +17,45 @@ curl
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
   https://api.dardy.me/sso/user/signin
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.post('https://api.dardy.me/sso/user/signin',
+  body: '{"user": {
+            "email": "test@example.com",
+            "password": "secret123"
+           }
+         }',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json',
+    'Authorization' => 'Dardy <jwt>'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "POST",
+  url: "https://api.dardy.me/sso/user/signin",
+  data: '{' +
+    '"user": {' +
+      '"email": "test@example.com",' +
+      '"password": "secret123"' +
+    '}' +
+  '}',
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json",
+    "Authorization": "Dardy <jwt>"
+  }
+});
 ```
 
 > Ritorna un JSON strutturato come segue:

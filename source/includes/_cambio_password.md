@@ -9,8 +9,11 @@ Il cambio password si completa in due fasi:
 
 ## Richiesta cambio password
 
+> Esempio
+
 ```shell
-# Richiesta cambio password
+
+# cURL
 
 curl
   -X POST
@@ -23,6 +26,45 @@ curl
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
   https://api.dardy.me/sso/password/reset
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.post('https://api.dardy.me/sso/password/reset',
+  body: '{"user": {
+            "email": "test@example.com",
+            "callback_url": "https//mio.sito.com/change/password (opzionale)"
+           }
+         }',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json',
+    'Authorization' => 'Dardy <jwt>'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "POST",
+  url: "https://api.dardy.me/sso/password/reset",
+  data: '{' +
+    '"user": {' +
+      '"email": "test@example.com",' +
+      '"callback_url": "https//mio.sito.com/change/password (opzionale)"' +
+    '}' +
+  '}',
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json",
+    "Authorization": "Dardy <jwt>"
+  }
+});
 ```
 
 Invia una mail all'indirizzo dell'utente che ha richiesto il cambio password.
@@ -64,8 +106,11 @@ Codice | Descrizione
 
 ## Cambio password
 
+> Esempio
+
 ```shell
-# Cambio password
+
+# cURL
 
 curl
   -X PUT
@@ -78,6 +123,45 @@ curl
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
   https://api.dardy.me/sso/password/reset/<reset-code>
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.put('https://api.dardy.me/sso/password/reset/<reset-code>',
+  body: '{"user": {
+            "password": "new_secret123",
+            "password_confirmation": "new_secret123"
+           }
+         }',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json',
+    'Authorization' => 'Dardy <jwt>'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "PUT",
+  url: "https://api.dardy.me/sso/password/reset",
+  data: '{' +
+    '"user": {' +
+      '"password": "new_secret123",' +
+      '"password_confirmation": "new_secret123"' +
+    '}' +
+  '}',
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json",
+    "Authorization": "Dardy <jwt>"
+  }
+});
 ```
 
 Effetua il cambio password utilizzando le nuove credenziali.

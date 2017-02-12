@@ -1,7 +1,10 @@
 # Aggiornamento Profilo Utente
 
+> Esempio
+
 ```shell
-# Cambio password
+
+# cURL
 
 curl
   -X PUT
@@ -14,6 +17,45 @@ curl
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
   https://api.dardy.me/sso/user/<id>/profile
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.put('https://api.dardy.me/sso/user/<id>/profile',
+  body: '{"profile": {
+            "phone_number": "nuovo numero di telefono",
+            "profession": "nuova professione"
+           }
+         }',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json',
+    'Authorization' => 'Dardy <jwt>'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "PUT",
+  url: "https://api.dardy.me/sso/user/<id>/profile",
+  data: '{' +
+    '"profile": {' +
+      '"phone_number": "nuovo numero di telefono",' +
+      '"profession": "nuova professione"' +
+    '}' +
+  '}',
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json",
+    "Authorization": "Dardy <jwt>"
+  }
+});
 ```
 
 > Ritorna un JSON strutturato come segue:

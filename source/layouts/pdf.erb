@@ -4,11 +4,12 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <meta name="date" content="<%= Time.now.strftime("%Y-%m-%dT%H:%M:%S%Z") %>">
-    <title><%= current_page.data.title %> v.<%= current_page.data.version %></title>
+    <meta name="date" content="<%= Time.now.strftime("%dT-%m-%Y%H:%M:%S%Z") %>">
+    <title><%= current_page.data.title %> v <%= current_page.data.version %></title>
+    <meta name="pdfkit-minimum_font_size" content="18">
     <meta name="pdfkit-footer_right" content="Page [page] of [topage]">
-    <meta name="pdfkit-footer_left" content="[title] | <%= Time.new.strftime("%Y-%m-%d") %>">
-    <meta name="pdfkit-footer_font_size" content="10">
+    <meta name="pdfkit-footer_left" content="[title] | <%= Time.new.strftime("%d-%m-%Y") %>">
+    <meta name="pdfkit-footer_font_size" content="8">
     <%= stylesheet_link_tag :print, media: :all %>
 
 </head>

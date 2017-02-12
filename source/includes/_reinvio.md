@@ -2,19 +2,70 @@
 
 Reinvia la mail di registrazione all'indirizzo specificato dall'utente.
 
-> Reinvio codice attivazione:
+Esistono due template per l'invio del codice di attivazione:
+
+1. Con codice attivazione (mobile)
+  * Escludendo `callback_url` dal corpo del messaggio HTTP
+2. Con link alla pagina di attivazione (web)
+  * Includendo `callback_url` nel corpo del messaggio HTTP
+  * il codice attivazione viene appeso all'url `callback_url`
+
+> Esempio
 
 ```shell
+
+# cURL
+
 curl
   -X POST
   -d '{"user": {
-        "email": "test@example.com"
+        "email": "test@example.com",
+        "callback_url": "https//mio.sito.com/activate (opzionale)"
       }
     }'
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
   https://api.dardy.me/sso/user/activation/resend
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.post('https://api.dardy.me/sso/user/activation/resend',
+  body: '{"user": {
+            "email": "test@example.com",
+            "callback_url": "https//mio.sito.com/activate (opzionale)"
+           }
+         }',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json',
+    'Authorization' => 'Dardy <jwt>'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "POST",
+  url: "https://api.dardy.me/sso/user/activation/resend",
+  data: '{' +
+    '"user": {' +
+      '"email": "test@example.com",' +
+      '"callback_url": "https//mio.sito.com/activate (opzionale)"' +
+    '}' +
+  '}',
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json",
+    "Authorization": "Dardy <jwt>"
+  }
+});
 ```
 
 > Ritorna un JSON strutturato come segue:
