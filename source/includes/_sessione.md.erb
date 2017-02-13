@@ -3,7 +3,6 @@
 ### Descrizione
 
 SSO usa chiavi di accesso per l'utilizzo dele API. Per richiedere le chiavi di accesso contattare il provider Dardy.
-
 > Esempio
 
 ```shell
@@ -19,7 +18,7 @@ curl -i
     }'
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
-  https://api.dardy.me/sso/session
+  <%= current_page.data.api_base_url %>/session
 ```
 
 ```ruby
@@ -27,7 +26,7 @@ curl -i
 
 require 'httparty'
 
-HTTParty.post('https://api.dardy.me/sso/session',
+HTTParty.post('<%= current_page.data.api_base_url %>/session',
   body: '{"account": {
             "access_key": "<access_key>",
             "secret_key": "<secret_key>"
@@ -45,7 +44,7 @@ HTTParty.post('https://api.dardy.me/sso/session',
 
 $.ajax({
   type: "POST",
-  url: "https://api.dardy.me/sso/session",
+  url: "<%= current_page.data.api_base_url %>/session",
   data: '{' +
     '"account": {' +
       '"access_key": "<access_key>",' +
@@ -75,7 +74,7 @@ $.ajax({
 
 ### Richiesta HTTP
 
-`POST https://api.dardy.me/sso/session`
+`POST <%= current_page.data.api_base_url %>/session`
 
 ### Headers HTTP
 

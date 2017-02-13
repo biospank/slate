@@ -26,7 +26,7 @@ curl
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
-  https://api.dardy.me/sso/user/activation/resend
+  <%= current_page.data.api_base_url %>/user/activation/resend
 ```
 
 ```ruby
@@ -34,7 +34,8 @@ curl
 
 require 'httparty'
 
-HTTParty.post('https://api.dardy.me/sso/user/activation/resend',
+HTTParty.post(
+  '<%= current_page.data.api_base_url %>/user/activation/resend',
   body: '{"user": {
             "email": "test@example.com",
             "callback_url": "https//mio.sito.com/activate (opzionale)"
@@ -53,7 +54,7 @@ HTTParty.post('https://api.dardy.me/sso/user/activation/resend',
 
 $.ajax({
   type: "POST",
-  url: "https://api.dardy.me/sso/user/activation/resend",
+  url: "<%= current_page.data.api_base_url %>/user/activation/resend",
   data: '{' +
     '"user": {' +
       '"email": "test@example.com",' +
@@ -87,7 +88,7 @@ Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
-`POST https://api.dardy.me/sso/user//activation/resend`
+`POST <%= current_page.data.api_base_url %>/user//activation/resend`
 
 ### Headers HTTP
 

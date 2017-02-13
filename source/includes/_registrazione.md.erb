@@ -51,7 +51,7 @@ curl
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
-  https://api.dardy.me/sso/user/signup
+  <%= current_page.data.api_base_url %>/user/signup
 ```
 
 ```ruby
@@ -59,7 +59,7 @@ curl
 
 require 'httparty'
 
-HTTParty.post('https://api.dardy.me/sso/user/signup',
+HTTParty.post('<%= current_page.data.api_base_url %>/user/signup',
   body: '{"user": {
           "email": "test@example.com",
           "password": "secret123",
@@ -94,7 +94,7 @@ HTTParty.post('https://api.dardy.me/sso/user/signup',
 
 $.ajax({
   type: "POST",
-  url: "https://api.dardy.me/sso/user/signup",
+  url: "<%= current_page.data.api_base_url %>/user/signup",
   data: '{"user": {' +
           '"email": "test@example.com",' +
           '"password": "secret123",' +
@@ -146,7 +146,7 @@ Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
-`POST https://api.dardy.me/sso/user/signup`
+`POST <%= current_page.data.api_base_url %>/user/signup`
 
 ### Headers HTTP
 
@@ -181,7 +181,7 @@ curl
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
-  https://api.dardy.me/sso/user/activate/<activation-code>
+  <%= current_page.data.api_base_url %>/user/activate/<activation-code>
 ```
 
 ```ruby
@@ -189,7 +189,8 @@ curl
 
 require 'httparty'
 
-HTTParty.put('https://api.dardy.me/sso/user/activate/<activation-code>',
+HTTParty.put(
+  '<%= current_page.data.api_base_url %>/user/activate/<activation-code>',
   headers: {
     'Accept' => 'application/vnd.dardy.sso.v1+json',
     'Content-Type' => 'application/json',
@@ -203,7 +204,7 @@ HTTParty.put('https://api.dardy.me/sso/user/activate/<activation-code>',
 
 $.ajax({
   type: "PUT",
-  url: "https://api.dardy.me/sso/user/activate/<activation-code>",
+  url: "<%= current_page.data.api_base_url %>/user/activate/<activation-code>",
   headers: {
     "Accept": "application/vnd.dardy.sso.v1+json",
     "Content-Type": "application/json",
@@ -231,7 +232,7 @@ Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
-`POST https://api.dardy.me/sso/user/activate/<activation-code>`
+`POST <%= current_page.data.api_base_url %>/user/activate/<activation-code>`
 
 ### Headers HTTP
 

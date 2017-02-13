@@ -16,7 +16,7 @@ curl
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
-  https://api.dardy.me/sso/user/<id>/profile
+  <%= current_page.data.api_base_url %>/user/<id>/profile
 ```
 
 ```ruby
@@ -24,7 +24,7 @@ curl
 
 require 'httparty'
 
-HTTParty.put('https://api.dardy.me/sso/user/<id>/profile',
+HTTParty.put('<%= current_page.data.api_base_url %>/user/<id>/profile',
   body: '{"profile": {
             "phone_number": "nuovo numero di telefono",
             "profession": "nuova professione"
@@ -43,7 +43,7 @@ HTTParty.put('https://api.dardy.me/sso/user/<id>/profile',
 
 $.ajax({
   type: "PUT",
-  url: "https://api.dardy.me/sso/user/<id>/profile",
+  url: "<%= current_page.data.api_base_url %>/user/<id>/profile",
   data: '{' +
     '"profile": {' +
       '"phone_number": "nuovo numero di telefono",' +
@@ -85,7 +85,7 @@ Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
-`PUT https://api.dardy.me/sso/user/<id>/profile`
+`PUT <%= current_page.data.api_base_url %>/user/<id>/profile`
 
 ### Parametri
 

@@ -16,7 +16,7 @@ curl
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
-  https://api.dardy.me/sso/user/signin
+  <%= current_page.data.api_base_url %>/user/signin
 ```
 
 ```ruby
@@ -24,7 +24,7 @@ curl
 
 require 'httparty'
 
-HTTParty.post('https://api.dardy.me/sso/user/signin',
+HTTParty.post('<%= current_page.data.api_base_url %>/user/signin',
   body: '{"user": {
             "email": "test@example.com",
             "password": "secret123"
@@ -43,7 +43,7 @@ HTTParty.post('https://api.dardy.me/sso/user/signin',
 
 $.ajax({
   type: "POST",
-  url: "https://api.dardy.me/sso/user/signin",
+  url: "<%= current_page.data.api_base_url %>/user/signin",
   data: '{' +
     '"user": {' +
       '"email": "test@example.com",' +
