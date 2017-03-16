@@ -21,6 +21,7 @@ includes:
   - autenticazione.md.erb
   - cambio_password.md.erb
   - profilo.md.erb
+  - i18n.md
   - errori.md
 
 search: true

@@ -2,12 +2,21 @@
 
 ### Descrizione
 
-La registrazione si completa in due fasi:
+Sono possibili due tipi di registrazione:
+
+1. Registrazione con attivazione
+2. Registrazione preautorizzata
+
+La registrazione con attivazione si completa in due fasi:
 
 * Registazione
 * Attivazione
 
-## Registazione
+La registrazione preautorizzata si completa in una fase:
+
+* Registazione
+
+## Registazione con attivazione
 
 Crea un utente `non attivo` in stato `non verificato`. Invia una mail all'indirizzo specificato dall'utente per la procedura di registrazione e una notifica via mail all'indirizzo dell'account.
 
@@ -18,6 +27,10 @@ Esistono due template per la mail di registrazione:
 2. Con link alla pagina di attivazione (web)
   * Includendo `callback_url` nel corpo del messaggio HTTP
   * il codice attivazione viene appeso all'url `callback_url`
+
+## Registazione preautorizzata
+
+Crea un utente `attivo` in stato `verificato`. Invia una mail di cortesia all'indirizzo specificato dall'utente.
 
 > Esempio
 
@@ -144,9 +157,13 @@ $.ajax({
 
 Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
-### Richiesta HTTP
+### Richiesta HTTP (registrazione con attivazione)
 
 `POST <%= current_page.data.api_base_url %>/user/signup`
+
+### Richiesta HTTP (registrazione preautorizzata)
+
+`POST <%= current_page.data.api_base_url %>/user/signup?authorize`
 
 ### Headers HTTP
 
