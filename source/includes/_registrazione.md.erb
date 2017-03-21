@@ -249,7 +249,7 @@ Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
-`POST <%= current_page.data.api_base_url %>/user/activate/<activation-code>`
+`PUT <%= current_page.data.api_base_url %>/user/activate/<activation-code>`
 
 ### Headers HTTP
 
@@ -276,5 +276,6 @@ Parameter | Description
 Codice | Descrizione
 ------------- | -------
 200 | Success -- La richiesta è andata a buon fine
+304 | Not Modified -- Utente già attivato
 404 | Not Found -- Codice di attivazione non valido
 422 | Unprocessable Entity -- Errore di validazione
