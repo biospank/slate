@@ -1,0 +1,92 @@
+# Dettaglio Utente
+
+> Esempio
+
+```shell
+
+# cURL
+
+curl
+  -X GET
+  -H "Accept: application/vnd.dardy.sso.v1+json"
+  -H "Content-Type: application/json"
+  -H "Authorization: Dardy <jwt>"
+  <%= current_page.data.api_base_url %>/user/<id>
+```
+
+```ruby
+# Ruby
+
+require 'httparty'
+
+HTTParty.get('<%= current_page.data.api_base_url %>/user/<id>',
+  headers: {
+    'Accept' => 'application/vnd.dardy.sso.v1+json',
+    'Content-Type' => 'application/json',
+    'Authorization' => 'Dardy <jwt>'
+  }
+)
+```
+
+```javascript
+// jQuery
+
+$.ajax({
+  type: "GET",
+  url: "<%= current_page.data.api_base_url %>/user/<id>",
+  headers: {
+    "Accept": "application/vnd.dardy.sso.v1+json",
+    "Content-Type": "application/json",
+    "Authorization": "Dardy <jwt>"
+  }
+});
+```
+
+> Ritorna un JSON strutturato come segue:
+
+```json
+{
+  "user": {
+    "id": 37,
+    "status": "verified",
+    "email": "test@example.com",
+    "active": true,
+    "profile": {
+      ...
+    }
+  }
+}
+```
+
+Ritorna il dettaglio dell'utente.
+
+**Nota**
+
+Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
+
+### Richiesta HTTP
+
+`GET <%= current_page.data.api_base_url %>/user/<id>`
+
+### Parametri
+
+Parameter | Description
+--------- | -----------
+&lt;id&gt; | Id dell'utente
+
+### Headers HTTP
+
+`Accept: application/vnd.dardy.sso.v1+json`
+
+`Authorization: Dardy <jwt>`
+
+<aside class="warning">
+  Sostituire <code>&lt;jwt&gt;</code> con il token presente nell'header della risposta alla chiamata di sessione.
+</aside>
+
+### Codici risposta HTTP
+
+Codice | Descrizione
+-------| -------
+200 | OK -- La richiesta è andata a buon fine
+404 | Not Found -- Utente non trovato
