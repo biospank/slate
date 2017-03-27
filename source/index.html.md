@@ -19,6 +19,7 @@ includes:
   - registrazione.md.erb
   - reinvio.md.erb
   - autenticazione.md.erb
+  - reset_password.md.erb
   - cambio_password.md.erb
   - profilo.md.erb
   - dettaglio.md.erb
