@@ -3,7 +3,7 @@ title: Documentazione API SSO
 
 version: "1.0"
 
-api_base_url: "https://api.dardy.me/sso"
+api_base_url: "https://dardy-sso-test.herokuapp.com/sso"
 
 language_tabs:
   - shell
