@@ -58,7 +58,9 @@ curl
           "board_number": "numero iscrizione",
           "province_board": "provincia iscrizione",
           "employment": "attività lavorativa",
-          "province_enployment": "provincia attività lavorativa"
+          "province_enployment": "provincia attività lavorativa",
+          "privacy_consent": consenso al trattamento dei dati personali (true/false),
+          "sso_privacy_consent": consenso al trattamento dei dati personali per sso (true/false)
         }
       }'
   -H "Accept: application/vnd.dardy.sso.v1+json"
@@ -91,7 +93,9 @@ HTTParty.post('<%= current_page.data.api_base_url %>/user/signup',
             "board_number": "numero iscrizione",
             "province_board": "provincia iscrizione",
             "employment": "attività lavorativa",
-            "province_enployment": "provincia attività lavorativa"
+            "province_enployment": "provincia attività lavorativa",
+            "privacy_consent": consenso al trattamento dei dati personali (true/false),
+            "sso_privacy_consent": consenso al trattamento dei dati personali per sso (true/false)
           }
         }',
   headers: {
@@ -126,7 +130,9 @@ $.ajax({
             '"board_number": "numero iscrizione",' +
             '"province_board": "provincia iscrizione",' +
             '"employment": "attività lavorativa",' +
-            '"province_enployment": "provincia attività lavorativa"' +
+            '"province_enployment": "provincia attività lavorativa",' +
+            '"privacy_consent": consenso al trattamento dei dati personali (true/false),' +
+            '"sso_privacy_consent": consenso al trattamento dei dati personali per sso (true/false),' +
           '}' +
         '}',
   headers: {

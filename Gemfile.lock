@@ -1,5 +1,5 @@
 PATH
-  remote: ./middleman-pdfmaker
+  remote: middleman-pdfmaker
   specs:
     middleman-pdfmaker (0.0.1)
       middleman-core (>= 4.1.10)
@@ -128,4 +128,4 @@ DEPENDENCIES
   rouge (~> 2.0.5)
 
 BUNDLED WITH
-   1.13.7
+   1.14.6
