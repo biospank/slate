@@ -18,6 +18,8 @@ La registrazione preautorizzata si completa in una fase:
 
 ## Registazione con attivazione
 
+### Descrizione
+
 Crea un utente `non attivo` in stato `non verificato`. Invia una mail all'indirizzo specificato dall'utente per la procedura di registrazione e una notifica via mail all'indirizzo dell'account.
 
 Esistono due template per la mail di registrazione:
@@ -28,9 +30,39 @@ Esistono due template per la mail di registrazione:
   * Includendo `callback_url` nel corpo del messaggio HTTP
   * il codice attivazione viene appeso all'url `callback_url`
 
+### Privacy
+Il consenso per la privacy è obbligatorio e viene dato sia all'app/sito da cui si effettua la registrazione dell'utente sia al servizio di SSO.
+
+I consensi obbligatori sono:
+
+1. `privacy_consent: true`
+2. `sso_privacy_consent: true`
+
+Se la registrazione viene completata correttamente, l'informazione della privacy data all'app/sito viene aggiunta nel campo:
+
+`app_consents: [...]`
+
+Consultare questo campo per verificare se un utente ha dato il consenso alla privacy per un determinato app/sito.
+
 ## Registazione preautorizzata
 
+### Descrizione
+
 Crea un utente `attivo` in stato `verificato`. Invia una mail di cortesia all'indirizzo specificato dall'utente.
+
+### Privacy
+Il consenso per la privacy è obbligatorio e viene dato sia all'app/sito da cui si effettua la registrazione dell'utente sia al servizio di SSO.
+
+I consensi obbligatori sono:
+
+1. `privacy_consent: true`
+2. `sso_privacy_consent: true`
+
+Se la registrazione viene completata correttamente, l'informazione della privacy data all'app/sito viene aggiunta nel campo:
+
+`app_consents: [...]`
+
+Consultare questo campo per verificare se un utente ha dato il consenso alla privacy per un determinato app/sito.
 
 > Esempio
 
@@ -41,26 +73,28 @@ Crea un utente `attivo` in stato `verificato`. Invia una mail di cortesia all'in
 curl
   -X POST
   -d '{"user": {
-        "email": "test@example.com",
-        "password": "secret123",
-        "password_confirmation": "secret123",
+        "email": "test@example.com (obbligatorio)",
+        "password": "secret123 (obbligatorio)",
+        "password_confirmation": "secret123 (obbligatorio)",
         "callback_url": "https//mio.sito.com/user/activate (opzionale)",
         "profile": {
-          "first_name": "nome",
-          "last_name": "congome",
-          "fiscal_code": "codice fiscale",
-          "date_of_birth": "data di nascita (yyyy-mm-dd)",
-          "place_of_birth": "luogo di nascita",
-          "phone_number": "numero di telefono",
-          "profession": "professione",
-          "specialization": "specializzazione",
-          "board_member": "iscrizione ordine",
-          "board_number": "numero iscrizione",
-          "province_board": "provincia iscrizione",
-          "employment": "attività lavorativa",
-          "province_enployment": "provincia attività lavorativa",
-          "privacy_consent": consenso al trattamento dei dati personali (true/false),
-          "sso_privacy_consent": consenso al trattamento dei dati personali per sso (true/false)
+          "first_name": "nome (obbligatorio)",
+          "last_name": "congome (obbligatorio)",
+          "fiscal_code": "codice fiscale (obbligatorio)",
+          "date_of_birth": "data di nascita (yyyy-mm-dd) (obbligatorio)",
+          "place_of_birth": "luogo di nascita (obbligatorio)",
+          "phone_number": "numero di telefono (obbligatorio)",
+          "profession": "professione (obbligatorio)",
+          "specialization": "specializzazione (obbligatorio)",
+          "board_member": "iscrizione ordine (obbligatorio)",
+          "board_number": "numero iscrizione (obbligatorio)",
+          "province_board": "provincia iscrizione (obbligatorio)",
+          "employment": "attività lavorativa (opzionale)",
+          "province_enployment": "provincia attività lavorativa (obbligatorio)",
+          "privacy_consent": "consenso privacy app (obbligatorio a true)",
+          "sso_privacy_consent": "consenso privacy sso (obbligatorio a true)",
+          "news_consent": "consenso invio comunicazioni (opzionale true/false)",
+          "data_transfer_consent": "consenso trattamento dati (opzionale true/false)"
         }
       }'
   -H "Accept: application/vnd.dardy.sso.v1+json"
@@ -76,26 +110,28 @@ require 'httparty'
 
 HTTParty.post('<%= current_page.data.api_base_url %>/user/signup',
   body: '{"user": {
-          "email": "test@example.com",
-          "password": "secret123",
-          "password_confirmation": "secret123",
-          "callback_url": "https//mio.sito.com/user/activate (opzionale)",
+          "email": "test@example.com (obbligatorio)",
+          "password": "secret123 (obbligatorio)",
+          "password_confirmation": "secret123 (obbligatorio)",
+          "callback_url": "https//mio.sito.com/user/activate (opzionale)" (opzionale),
           "profile": {
-            "first_name": "nome",
-            "last_name": "congome",
-            "fiscal_code": "codice fiscale",
-            "date_of_birth": "data di nascita (yyyy-mm-dd)",
-            "place_of_birth": "luogo di nascita",
-            "phone_number": "numero di telefono",
-            "profession": "professione",
-            "specialization": "specializzazione",
-            "board_member": "iscrizione ordine",
-            "board_number": "numero iscrizione",
-            "province_board": "provincia iscrizione",
-            "employment": "attività lavorativa",
-            "province_enployment": "provincia attività lavorativa",
-            "privacy_consent": consenso al trattamento dei dati personali (true/false),
-            "sso_privacy_consent": consenso al trattamento dei dati personali per sso (true/false)
+            "first_name": "nome (obbligatorio)",
+            "last_name": "congome (obbligatorio)",
+            "fiscal_code": "codice fiscale (obbligatorio)",
+            "date_of_birth": "data di nascita (yyyy-mm-dd) (obbligatorio)",
+            "place_of_birth": "luogo di nascita (obbligatorio)",
+            "phone_number": "numero di telefono (obbligatorio)",
+            "profession": "professione (obbligatorio)",
+            "specialization": "specializzazione (obbligatorio)",
+            "board_member": "iscrizione ordine (obbligatorio)",
+            "board_number": "numero iscrizione (obbligatorio)",
+            "province_board": "provincia iscrizione (obbligatorio)",
+            "employment": "attività lavorativa (opzionale)" (opzionale),
+            "province_enployment": "provincia attività lavorativa (obbligatorio)",
+            "privacy_consent": "consenso privacy app (obbligatorio a true)",
+            "sso_privacy_consent": "consenso privacy sso (obbligatorio a true)",
+            "news_consent": "consenso invio comunicazioni (opzionale true/false)",
+            "data_transfer_consent": "consenso trattamento dati (opzionale true/false)"
           }
         }',
   headers: {
@@ -113,26 +149,28 @@ $.ajax({
   type: "POST",
   url: "<%= current_page.data.api_base_url %>/user/signup",
   data: '{"user": {' +
-          '"email": "test@example.com",' +
-          '"password": "secret123",' +
-          '"password_confirmation": "secret123",' +
+          '"email": "test@example.com (obbligatorio)",' +
+          '"password": "secret123 (obbligatorio)",' +
+          '"password_confirmation": "secret123 (obbligatorio)",' +
           '"callback_url": "https//mio.sito.com/user/activate (opzionale)",' +
           '"profile": {' +
-            '"first_name": "nome",' +
-            '"last_name": "congome",' +
-            '"fiscal_code": "codice fiscale",' +
-            '"date_of_birth": "data di nascita (yyyy-mm-dd)",' +
-            '"place_of_birth": "luogo di nascita",' +
-            '"phone_number": "numero di telefono",' +
-            '"profession": "professione",' +
-            '"specialization": "specializzazione",' +
-            '"board_member": "iscrizione ordine",' +
-            '"board_number": "numero iscrizione",' +
-            '"province_board": "provincia iscrizione",' +
-            '"employment": "attività lavorativa",' +
-            '"province_enployment": "provincia attività lavorativa",' +
-            '"privacy_consent": consenso al trattamento dei dati personali (true/false),' +
-            '"sso_privacy_consent": consenso al trattamento dei dati personali per sso (true/false),' +
+            '"first_name": "nome (obbligatorio)",' +
+            '"last_name": "congome (obbligatorio)",' +
+            '"fiscal_code": "codice fiscale (obbligatorio)",' +
+            '"date_of_birth": "data di nascita (yyyy-mm-dd) (obbligatorio)",' +
+            '"place_of_birth": "luogo di nascita (obbligatorio)",' +
+            '"phone_number": "numero di telefono (obbligatorio)",' +
+            '"profession": "professione (obbligatorio)",' +
+            '"specialization": "specializzazione (obbligatorio)",' +
+            '"board_member": "iscrizione ordine (obbligatorio)",' +
+            '"board_number": "numero iscrizione (obbligatorio)",' +
+            '"province_board": "provincia iscrizione (obbligatorio)",' +
+            '"employment": "attività lavorativa (opzionale)",' +
+            '"province_enployment": "provincia attività lavorativa (obbligatorio)",' +
+            '"privacy_consent": "consenso privacy app (obbligatorio a true)",' +
+            '"sso_privacy_consent": "consenso privacy sso (obbligatorio a true)",' +
+            '"new_consent": "consenso invio comunicazioni (opzionale true/false)",' +
+            '"data_transfer_consent": "consenso trattamento dati (opzionale true/false)",' +
           '}' +
         '}',
   headers: {
@@ -153,6 +191,14 @@ $.ajax({
     "email": "test@example.com",
     "active": false,
     "profile": {
+      ...
+      "app_consents": [
+        {
+          "app_id": "identificativo app/sito",
+          "app_name": "nome app/sito a cui è stato dato il consenso",
+          "privacy": true
+        }
+      ]
       ...
     }
   }
@@ -190,6 +236,8 @@ Codice | Descrizione
 422 | Unprocessable Entity -- Errore di validazione
 
 ## Attivazione
+
+### Descrizione
 
 Invia la richiesta di attivazione.
 

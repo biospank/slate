@@ -1,7 +1,8 @@
 # Codici Errore HTTP
 
-SSO usa i seguenti codici di errore, oltre a quelli specifici, su tutti gli endpoints:
+### Descrizione
 
+SSO usa i seguenti codici di errore, oltre a quelli specifici, su tutti gli endpoints:
 
 Codice | Descrizione
 -------| -------

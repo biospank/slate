@@ -1,5 +1,21 @@
 # Aggiornamento Profilo Utente
 
+### Descrizione
+
+Aggiorna il profilo utente con i dati inviati nel corpo del messaggio HTTP.
+
+### Privacy
+Il consenso alla privacy è obbligatorio e deve essere fornito dall'app/sito che effettua la registrazione dell'utente.
+Tale consenso può essere dato in fase successiva alla registrazione solo se il consenso proviene da un app/sito diverso da quello di registrazione.
+
+Il consenso da fornire è:
+
+1. `privacy_consent: true`
+
+Se l'aggiornamento del profilo viene completato correttamente, l'informazione della privacy data all'app/sito viene aggiunto nel campo:
+
+`app_consents: [...]`
+
 > Esempio
 
 ```shell
@@ -68,6 +84,18 @@ $.ajax({
       ...
       "phone_number": "nuovo numero di telefono",
       "profession": "nuova professione",
+      "app_consents": [
+        {
+          "app_id": "identificativo app/sito di registrazione",
+          "app_name": "nome app/sito a cui è stato dato il consenso",
+          "privacy": true
+        },
+        {
+          "app_id": "identificativo app/sito",
+          "app_name": "nome app/sito a cui è stato dato il consenso",
+          "privacy": true
+        }
+      ]
       ...
     },
     "id": 37,
@@ -76,8 +104,6 @@ $.ajax({
   }
 }
 ```
-
-Aggiorna il profilo utente con i dati inviati nel corpo del messaggio HTTP.
 
 **Nota**
 
