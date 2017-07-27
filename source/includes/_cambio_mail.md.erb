@@ -1,25 +1,25 @@
-# Reset Password Utente
+# Cambio Mail Utente
 
 ### Descrizione
 
-Il reset della password si completa in due fasi:
+Il cambio della mail si completa in due fasi:
 
-* Richiesta reset password
-* Reset password
+* Richiesta cambio mail
+* Cambio mail
 
-## Richiesta reset password
+## Richiesta cambio mail
 
 ### Descrizione
 
-Invia una mail all'indirizzo dell'utente che ha richiesto il reset della password.
+Invia una mail al nuovo indirizzo dell'utente che ha richiesto il cambio della mail.
 
-Esistono due template per la mail di richiesta reset password:
+Esistono due template email per la richiesta di cambio mail:
 
-1. Con codice reset password (mobile)
+1. Con codice cambio mail (mobile)
   * Escludendo `callback_url` dal corpo del messaggio HTTP
-2. Con link alla pagina di reset password (web)
+2. Con link alla pagina di cambio mail (web)
   * Includendo `callback_url` nel corpo del messaggio HTTP
-  * il codice reset password viene appeso all'url `callback_url`
+  * il codice cambio mail viene appeso all'url `callback_url`
 
 > Esempio
 
@@ -30,14 +30,16 @@ Esistono due template per la mail di richiesta reset password:
 curl
   -X POST
   -d '{"user": {
-        "email": "test@example.com",
-        "callback_url": "https//mio.sito.com/change/password (opzionale)"
+        "new_email": "test.cambio.mail@example.com",
+        "new_email_confirmation": "test.cambio.mail@example.com",
+        "password": "secret123",
+        "callback_url": "https//mio.sito.com/cambio/password (opzionale)"
       }
     }'
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
-  <%= current_page.data.api_base_url %>/user/password/reset
+  <%= current_page.data.api_base_url %>/user/<id>/email/change
 ```
 
 ```ruby
@@ -45,10 +47,12 @@ curl
 
 require 'httparty'
 
-HTTParty.post('<%= current_page.data.api_base_url %>/user/password/reset',
+HTTParty.post('<%= current_page.data.api_base_url %>/user/<id>/email/change',
   body: '{"user": {
-            "email": "test@example.com",
-            "callback_url": "https//mio.sito.com/change/password (opzionale)"
+            "new_email": "test.cambio.mail@example.com",
+            "new_email_confirmation": "test.cambio.mail@example.com",
+            "password": "secret123",
+            "callback_url": "https//mio.sito.com/cambio/password (opzionale)"
            }
          }',
   headers: {
@@ -64,10 +68,12 @@ HTTParty.post('<%= current_page.data.api_base_url %>/user/password/reset',
 
 $.ajax({
   type: "POST",
-  url: "<%= current_page.data.api_base_url %>/user/password/reset",
+  url: "<%= current_page.data.api_base_url %>/user/<id>/email/change",
   data: '{' +
     '"user": {' +
-      '"email": "test@example.com",' +
+      '"new_email": "test.cambio.mail@example.com",' +
+      '"new_email_confirmation": "test.cambio.mail@example.com",' +
+      '"password": "secret123",' +
       '"callback_url": "https//mio.sito.com/change/password (opzionale)"' +
     '}' +
   '}',
@@ -85,7 +91,13 @@ Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
-`POST <%= current_page.data.api_base_url %>/user/password/reset`
+`POST <%= current_page.data.api_base_url %>/user/<id>/email/change`
+
+### Parametri
+
+Parametro | Descrizione
+--------- | -----------
+&lt;id&gt; | Id dell'utente che ha effettuato l'accesso al sistema
 
 ### Headers HTTP
 
@@ -102,14 +114,15 @@ Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 Codice | Descrizione
 -------| -------
 201 | Created -- La richiesta è andata a buon fine
-404 | Not Found -- Email non trovata
+401 | Unauthorized -- Utente non autorizzato
+404 | Not Found -- Utente non trovato
 422 | Unprocessable Entity -- Errore di validazione
 
-## Reset password
+## Cambio mail
 
 ### Descrizione
 
-Effetua il reset della password utilizzando le nuove credenziali.
+Effettua il cambio mail.
 
 > Esempio
 
@@ -119,15 +132,10 @@ Effetua il reset della password utilizzando le nuove credenziali.
 
 curl
   -X PUT
-  -d '{"user": {
-        "password": "new_secret123",
-        "password_confirmation": "new_secret123"
-      }
-    }'
   -H "Accept: application/vnd.dardy.sso.v1+json"
   -H "Content-Type: application/json"
   -H "Authorization: Dardy <jwt>"
-  <%= current_page.data.api_base_url %>/user/password/reset/<reset-code>
+  <%= current_page.data.api_base_url %>/user/email/change/<email-change-code>
 ```
 
 ```ruby
@@ -136,12 +144,7 @@ curl
 require 'httparty'
 
 HTTParty.put(
-  '<%= current_page.data.api_base_url %>/user/password/reset/<reset-code>',
-  body: '{"user": {
-            "password": "new_secret123",
-            "password_confirmation": "new_secret123"
-           }
-         }',
+  '<%= current_page.data.api_base_url %>/user/email/change/<email-change-code>',
   headers: {
     'Accept' => 'application/vnd.dardy.sso.v1+json',
     'Content-Type' => 'application/json',
@@ -155,13 +158,7 @@ HTTParty.put(
 
 $.ajax({
   type: "PUT",
-  url: "<%= current_page.data.api_base_url %>/user/password/reset/<reset-code>",
-  data: '{' +
-    '"user": {' +
-      '"password": "new_secret123",' +
-      '"password_confirmation": "new_secret123"' +
-    '}' +
-  '}',
+  url: "<%= current_page.data.api_base_url %>/user/email/change/<email-change-code>",
   headers: {
     "Accept": "application/vnd.dardy.sso.v1+json",
     "Content-Type": "application/json",
@@ -176,13 +173,13 @@ Per utilizzare questo endpoint è necessario creare una [sessione](#sessione).
 
 ### Richiesta HTTP
 
-`PUT <%= current_page.data.api_base_url %>/user/password/reset/<reset-code>`
+`PUT <%= current_page.data.api_base_url %>/user/email/change/<email-change-code>`
 
 ### Parametri
 
 Parametro | Descrizione
 --------- | -----------
-&lt;reset-code&gt; | Codice di reset fornito dall'utente che ha ricevuto la mail
+&lt;email-change-code&gt; | Codice presente nella mail ricevuta dall'utente (web/mobile)
 
 ### Headers HTTP
 
@@ -200,4 +197,3 @@ Codice | Descrizione
 -------| -------
 200 | OK -- La richiesta è andata a buon fine
 404 | Not Found -- Codice non trovato
-422 | Unprocessable Entity -- Errore di validazione
